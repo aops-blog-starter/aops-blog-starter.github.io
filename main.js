@@ -1,5 +1,6 @@
 option_pane = document.getElementById("options");
 
+// Functions for constructing the option pane
 let settings = {
   toggle: (name, label, value) => {
     let checkbox_label = document.createElement('label');
@@ -28,7 +29,7 @@ let settings = {
     option_pane.appendChild(select_label);
     option_pane.appendChild(document.createElement('br'));
   },
-  text: (name, label, value) => {
+  text_input: (name, label, value) => {
     let text_label = document.createElement('label');
     let text_input = document.createElement('input');
     text_input.type = 'text';
@@ -43,18 +44,24 @@ let settings = {
     let header = document.createElement('h3');
     header.innerText = text;
     option_pane.appendChild(header);
-  }
+  },
+  text: text => {
+    let p = document.createElement('p');
+    p.innerText = text;
+    option_pane.appendChild(p);
+  },
 }
 
 // Settings
 settings.select('sidebar_mode', 'Sidebar mode', ['Right', 'Left', 'Float']);
-settings.text("wrapper_bg", "Wrapper background", '');
+settings.text_input("wrapper_bg", "Wrapper background", '');
 settings.section_header('Fixes');
+settings.text('These add code fixing certain quirks and bugs with the default CSS, and should generally be left on.');
 settings.toggle('fixes_code', 'Fix code text visibility', true);
-settings.toggle('fixes_feed_admin', 'Fix admin/mod colors in feed', true);
 settings.toggle('fixes_feed_admin', 'Fix admin/mod colors in feed', true);
 settings.toggle('fixes_shout_double_scrollbar', 'Fix double scrollbar in shouts', true);
 
+// CSS for fix_* options
 let fix_codes = [
   ['fixes_code', `\
 /* Code color */
@@ -69,6 +76,7 @@ code[class*="language-"] {
 .cmty-forum-mod a{color: #090 !important;}
 `],
   ['fixes_shout_double_scrollbar', `\
+/* Shout scrollbar fix */
 .blog-shout-wrapper > .aops-scroll-outer > .aops-scroll-inner{
 scrollbar-width: none;
 }
@@ -79,6 +87,7 @@ width: 0px;
 `],
 ];
 
+// Big ugly code to generate the CSS
 let generate = conf => {
   let wrapper_bg = conf.wrapper_bg
     ? conf.wrapper_bg
@@ -114,6 +123,7 @@ ${fixes}` : ''}\
 `;
 }
 
+// Messages generated CSS to the child frame
 function send_css() {
   let conf = {};
   for (let el of option_pane.elements) conf[el.name] = el.type == "checkbox" ? el.checked : el.value;
@@ -123,8 +133,10 @@ function send_css() {
   }, '*');
 }
 
+// Send CSS if the child requests it
 window.addEventListener('message', e => {
   if (e.data == 'css request') send_css();
 });
+// Send CSS when the options are changed
 option_pane.addEventListener('input', send_css);
 

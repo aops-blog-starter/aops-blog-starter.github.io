@@ -4,9 +4,11 @@
     <link rel="stylesheet" href="base.css">
     <style id="custom_css"></style>
     <script>
+        // Recieve CSS from parent
         window.addEventListener('message', e => {
             if (e.data.type == 'blog css') document.getElementById('custom_css').textContent = e.data.css;
         });
+        // Request for the parent to send CSS
         window.parent.postMessage('css request', '*');
     </script>
 </head>
