@@ -1,10 +1,12 @@
+/* Stylesheet that replicates AoPS's */
 body{
     text-align: center;
 }
 #wrapper{
     width: 800px;
     display: inline-block;
-    background: linear-gradient(270deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px)
+    background: linear-gradient(270deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px);
+    text-align: left;
 }
 
 #side{
@@ -14,4 +16,19 @@ body{
 
 #main{
     width: 530px;
+}
+
+.entry > h1{
+    font-size: 16pt;
+}
+
+.entry > h2{
+    font-size: 10pt;
+    line-height: 0;
+}
+
+.entry > p {
+    border: 1px solid black;
+    background: #dedede;
+    padding: 10px;
 }
