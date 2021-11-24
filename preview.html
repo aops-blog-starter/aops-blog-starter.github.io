@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="base.css">
+    <style id="custom_css"></style>
+    <script>
+        window.addEventListener('message', e => {
+            if (e.data.type == 'blog css') document.getElementById('custom_css').textContent = e.data.css;
+        });
+        window.parent.postMessage('css request', '*');
+    </script>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="content">
+            <div id="main">
+            </div>
+            <div id="side">
+                Sidebar text
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

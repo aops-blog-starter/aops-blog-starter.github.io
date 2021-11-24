@@ -1,0 +1,17 @@
+body{
+    text-align: center;
+}
+#wrapper{
+    width: 800px;
+    display: inline-block;
+    background: linear-gradient(270deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px)
+}
+
+#side{
+    width: 260px;
+    float: right;
+}
+
+#main{
+    width: 530px;
+}

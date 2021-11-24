@@ -1,0 +1,8 @@
+body{
+    display: flex;
+    height: 100% !important;
+    margin: 0;
+}
+#options, #preview {
+    flex: 1;
+}
