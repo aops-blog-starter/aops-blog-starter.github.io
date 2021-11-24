@@ -123,13 +123,32 @@ ${fixes}` : ''}\
 `;
 }
 
+let current_css;
+let copy_button = document.getElementById('copy_button');
+const COPY_BUTTON_TEXT = 'Copy generated CSS';
+let copy_timeout;
+copy_button.addEventListener('click', () => {
+  if (!current_css) return;
+  navigator.clipboard.writeText(current_css).then(() => {
+    copy_button.innerText = 'CSS Copied';
+    if (copy_timeout) clearTimeout(copy_timeout);
+    copy_timeout = setTimeout(() => copy_button.innerText = COPY_BUTTON_TEXT, 1000);
+  }).catch(() => {
+    copy_button.innerText = 'CSS could not be copied';
+    if (copy_timeout) clearTimeout(copy_timeout);
+    copy_timeout = setTimeout(() => copy_button.innerText = COPY_BUTTON_TEXT, 3000);
+  });
+});
+
+
 // Messages generated CSS to the child frame
 function send_css() {
   let conf = {};
   for (let el of option_pane.elements) conf[el.name] = el.type == "checkbox" ? el.checked : el.value;
+  current_css = generate(conf);
   window.frames[0].postMessage({
     type: 'blog css',
-    css: generate(conf),
+    css: current_css,
   }, '*');
 }
 

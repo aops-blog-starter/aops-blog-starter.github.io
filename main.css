@@ -3,6 +3,6 @@ body{
     height: 100% !important;
     margin: 0;
 }
-#options, #preview {
+.pane {
     flex: 1;
 }
