@@ -54,6 +54,7 @@ let settings = {
 
 // Settings
 settings.select('sidebar_mode', 'Sidebar mode', ['Right', 'Left', 'Float']);
+settings.toggle('wrapper_full_width', 'Full width wrapper', false);
 settings.text_input("wrapper_bg", "Wrapper background", '');
 settings.section_header('Fixes');
 settings.text('These add code fixing certain quirks and bugs with the default CSS, and should generally be left on.');
@@ -89,11 +90,14 @@ width: 0px;
 
 // Big ugly code to generate the CSS
 let generate = conf => {
+  let segments = []
   let wrapper_bg = conf.wrapper_bg
     ? conf.wrapper_bg
-    : conf.sidebar_mode === 'Left'
-      ? 'linear-gradient(90deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px)'
-      : ''
+    : {
+      'Left': 'linear-gradient(90deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px)',
+      'Right': null,
+      'Float': '#fff',
+    }[conf.sidebar_mode]
     ;
   let fixes = '';
   for (const [fix, code] of fix_codes) {
@@ -101,10 +105,9 @@ let generate = conf => {
       fixes += code;
     }
   }
-  return `\
-${{
-      'Right': '',
-      'Left': `\
+  segments.push({
+    'Right': '',
+    'Left': `\
 #main{
   float: right;
 }
@@ -112,9 +115,10 @@ ${{
   float: left;
 }
 `,
-      'Float': `\
+    'Float': `\
 #side {
   position: fixed;
+  z-index: 1000000;
   left: -270px;
   top: 0;
   height: 100%;
@@ -137,14 +141,32 @@ ${{
   display: none;
 }
 `,
-    }[conf.sidebar_mode]}\
-${wrapper_bg ? `#wrapper{
+  }[conf.sidebar_mode]);
+  if (wrapper_bg) segments.push(`#wrapper{
   background: ${wrapper_bg};
 }
-` : ''}\
-${fixes ? `/* Fixes */
-${fixes}` : ''}\
-`;
+`);
+
+  if (conf.sidebar_mode === 'Float') {
+    segments.push(`\
+#main {
+  width: 100%;
+}
+`);
+  } else if (conf.wrapper_full_width === true) segments.push(`\
+#main {
+  width: calc(100% - 270px);
+}
+`)
+  if (conf.wrapper_full_width === true) segments.push(`\
+#wrapper {
+  width: 100%;
+};
+`);
+
+  if (fixes) segments.push(`/* Fixes */
+${fixes}`);
+  return segments.join('');
 }
 
 let current_css;
