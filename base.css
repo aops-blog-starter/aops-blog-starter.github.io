@@ -14,6 +14,8 @@ body{
     display: inline-block;
     background: linear-gradient(270deg, #f3f3f3 0, #f3f3f3 260px, #fff 260px);
     text-align: left;
+    border: #bcbcbc solid 1px;
+    border-top: none;
 }
 
 #side{
@@ -23,6 +25,7 @@ body{
 
 #main{
     width: 530px;
+    padding: 5px;
 }
 
 .entry > h1{
@@ -38,6 +41,7 @@ body{
     border: 1px solid black;
     background: #dedede;
     padding: 10px;
+    margin: 5px;
 }
 #navigation_box{
     background-color: #1b365d;
