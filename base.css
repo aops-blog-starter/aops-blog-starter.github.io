@@ -21,11 +21,13 @@ body{
 #side{
     width: 260px;
     float: right;
+    padding: 5px;
 }
 
 #main{
     width: 530px;
     padding: 5px;
+    display:inline-block;
 }
 
 .entry > h1{
@@ -103,4 +105,8 @@ body{
     text-decoration: underline;
     margin-right: 5px;
     display: inline-block;
+}
+.username-colored{
+    color: #2188e0;
+    text-decoration: none;
 }
