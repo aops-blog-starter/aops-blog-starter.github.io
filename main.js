@@ -99,12 +99,8 @@ let generate = conf => {
       'Float': '#fff',
     }[conf.sidebar_mode]
     ;
-  let fixes = '';
-  for (const [fix, code] of fix_codes) {
-    if (conf[fix]) {
-      fixes += code;
-    }
-  }
+
+  // Sidebar modes
   segments.push({
     'Right': '',
     'Left': `\
@@ -147,6 +143,12 @@ let generate = conf => {
 }
 `);
 
+  /*
+  Wrapper handling.
+  This handles the full width wrapper and the sidebar mode.
+  If the wrapper is floating main needs to be full width.
+  If it isn't but the wrapper is full width, main needs calc to adjust with the sidebar.
+  */
   if (conf.sidebar_mode === 'Float') {
     segments.push(`\
 #main {
@@ -164,6 +166,13 @@ let generate = conf => {
 };
 `);
 
+  // Adds fixes
+  let fixes = '';
+  for (const [fix, code] of fix_codes) {
+    if (conf[fix]) {
+      fixes += code;
+    }
+  }
   if (fixes) segments.push(`/* Fixes */
 ${fixes}`);
   return segments.join('');
