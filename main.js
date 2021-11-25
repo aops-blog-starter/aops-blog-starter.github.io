@@ -112,7 +112,31 @@ ${{
   float: left;
 }
 `,
-      'Float': '',
+      'Float': `\
+#side {
+  position: fixed;
+  left: -270px;
+  top: 0;
+  height: 100%;
+  overflow-y: scroll;
+  background: #f3f3f3;
+}
+#side:hover{
+  left: 0;
+}
+#side::before{
+  position: fixed;
+  left: 0;
+  top: 100px;
+  content: '>';
+  background: #ccc;
+  padding: 10px;
+  border-radius: 0 50% 50% 0;
+}
+#side:hover::before{
+  display: none;
+}
+`,
     }[conf.sidebar_mode]}\
 ${wrapper_bg ? `#wrapper{
   background: ${wrapper_bg};
