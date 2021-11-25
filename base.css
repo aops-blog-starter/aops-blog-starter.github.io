@@ -134,3 +134,11 @@ a {
 #about-owner-widget, #stats-widget{
     font-size: 14px;
 }
+#search-widget fieldset {
+    display: block;
+    background-color: transparent;
+    margin: 0 2px;
+    padding: 0;
+    width:fit-content;
+    width:-moz-fit-content;
+}
