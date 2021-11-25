@@ -37,7 +37,7 @@ body{
     line-height: 0;
 }
 
-.entry > p {
+.entrywrap {
     border: 1px solid black;
     background: #dedede;
     padding: 10px;
@@ -89,4 +89,18 @@ body{
 }
 #header h1{
     font-weight: normal;
+}
+.entry h1, .entry h2{
+    color: rgb(33, 136, 224);
+    font-weight: normal;
+}
+.efooter{
+    line-height:20px;
+    font-size: 10px;
+}
+.efooter a{
+    color: rgb(33, 136, 224);
+    text-decoration: underline;
+    margin-right: 5px;
+    display: inline-block;
 }
