@@ -9,3 +9,6 @@ body{
 .pane {
     flex: 1;
 }
+pre{
+    font-size:16px;
+}

@@ -2,58 +2,61 @@ option_pane = document.getElementById("options");
 
 // Functions for constructing the option pane
 let settings = {
-  toggle: (name, label, value) => {
-    let checkbox_label = document.createElement('label');
-    let checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.name = name;
-    checkbox.checked = value;
-    checkbox_label.appendChild(checkbox);
-    checkbox_label.appendChild(document.createTextNode(' ' + label));
-    option_pane.appendChild(checkbox_label);
-    option_pane.appendChild(document.createElement('br'));
-  },
-  select: (name, label, options) => {
-    let select_label = document.createElement('label');
-    select_label.innerText = label + ' ';
-    let select = document.createElement('select');
-    select.name = name;
-    for (let option of options) {
-      let option_element = document.createElement('option');
-      option_element.value = option;
-      option_element.innerText = option;
-      select.appendChild(option_element);
-    }
-    select.value = options[0];
-    select_label.appendChild(select);
-    option_pane.appendChild(select_label);
-    option_pane.appendChild(document.createElement('br'));
-  },
-  text_input: (name, label, value) => {
-    let text_label = document.createElement('label');
-    let text_input = document.createElement('input');
-    text_input.type = 'text';
-    text_input.name = name;
-    text_input.value = value;
-    text_label.appendChild(text_input);
-    text_label.appendChild(document.createTextNode(' ' + label));
-    option_pane.appendChild(text_label);
-    option_pane.appendChild(document.createElement('br'));
-  },
-  section_header: text => {
-    let header = document.createElement('h3');
-    header.innerText = text;
-    option_pane.appendChild(header);
-  },
-  text: text => {
-    let p = document.createElement('p');
-    p.innerText = text;
-    option_pane.appendChild(p);
-  },
-}
+	toggle: (name, label, value) => {
+		let checkbox_label = document.createElement("label");
+		let checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.name = name;
+		checkbox.checked = value;
+		checkbox_label.appendChild(checkbox);
+		checkbox_label.appendChild(document.createTextNode(" " + label));
+		option_pane.appendChild(checkbox_label);
+		option_pane.appendChild(document.createElement("br"));
+	},
+	select: (name, label, options) => {
+		let select_label = document.createElement("label");
+		select_label.innerText = label + " ";
+		let select = document.createElement("select");
+		select.name = name;
+		for (let option of options) {
+			let option_element = document.createElement("option");
+			option_element.value = option;
+			option_element.innerText = option;
+			select.appendChild(option_element);
+		}
+		select.value = options[0];
+		select_label.appendChild(select);
+		option_pane.appendChild(select_label);
+		option_pane.appendChild(document.createElement("br"));
+	},
+	text_input: (name, label, value) => {
+		let text_label = document.createElement("label");
+		let text_input = document.createElement("input");
+		text_input.type = "text";
+		text_input.name = name;
+		text_input.value = value;
+		text_label.appendChild(text_input);
+		text_label.appendChild(document.createTextNode(" " + label));
+		option_pane.appendChild(text_label);
+		option_pane.appendChild(document.createElement("br"));
+	},
+	section_header: (text) => {
+		let header = document.createElement("h3");
+		header.innerText = text;
+		option_pane.appendChild(header);
+	},
+	text: (text) => {
+		let p = document.createElement("p");
+		p.innerHTML = text;
+		option_pane.appendChild(p);
+	},
+};
 
 // Settings
-settings.select('sidebar_mode', 'Sidebar mode', ['Right', 'Left', 'Float']);
+settings.select("sidebar_mode", "Sidebar mode", ["Right", "Left", "Float"]);
+settings.text(
+	"Note that since the value of the following form will be directly put in the CSS as the value of the property 'background,' do not just insert a URL Address. Instead, encompass your URL Address inside the parenthesis of <span style='font-family: monospace''>url()</span>."
+);
 settings.text_input("wrapper_bg", "Wrapper background", '');
 settings.section_header('Fixes');
 settings.text('These add code fixing certain quirks and bugs with the default CSS, and should generally be left on.');
