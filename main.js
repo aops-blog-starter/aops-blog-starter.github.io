@@ -1,7 +1,13 @@
-option_pane = document.getElementById("options");
+const option_pane = document.getElementById('options');
 
 // Functions for constructing the option pane
-let settings = {
+const settings = {
+  /**
+   * Insert a toggle into the option pane
+   * @param {string} name Name of the setting
+   * @param {string} label Label for the option
+   * @param {boolean} value Default value
+   */
   toggle: (name, label, value) => {
     let checkbox_label = document.createElement('label');
     let checkbox = document.createElement('input');
@@ -13,6 +19,12 @@ let settings = {
     option_pane.appendChild(checkbox_label);
     option_pane.appendChild(document.createElement('br'));
   },
+  /**
+   * Insert a selector into the option pane
+   * @param {string} name Name of the setting
+   * @param {string} label Label for the option
+   * @param {string[]} options Selectable options
+   */
   select: (name, label, options) => {
     let select_label = document.createElement('label');
     select_label.innerText = label + ' ';
@@ -29,6 +41,12 @@ let settings = {
     option_pane.appendChild(select_label);
     option_pane.appendChild(document.createElement('br'));
   },
+  /**
+   * Insert a text input into the option pane
+   * @param {string} name Name of the setting
+   * @param {string} label Label for the option
+   * @param {string} value Default value
+   */
   text_input: (name, label, value) => {
     let text_label = document.createElement('label');
     let text_input = document.createElement('input');
@@ -40,57 +58,79 @@ let settings = {
     option_pane.appendChild(text_label);
     option_pane.appendChild(document.createElement('br'));
   },
+  /**
+   * Insert a header into the option pane
+   * @param {string} text Header text
+   */
   section_header: text => {
     let header = document.createElement('h3');
     header.innerText = text;
     option_pane.appendChild(header);
   },
+  /**
+   * Insert text into the option pane
+   * @param {string} text Text to insert
+   */
   text: text => {
     let p = document.createElement('p');
     p.innerText = text;
     option_pane.appendChild(p);
   },
-}
+};
 
 // Settings
 settings.select('sidebar_mode', 'Sidebar mode', ['Right', 'Left', 'Float']);
 settings.toggle('wrapper_full_width', 'Full width wrapper', false);
-settings.text_input("wrapper_bg", "Wrapper background", '');
+settings.text_input('wrapper_bg', 'Wrapper background', '');
 settings.section_header('Fixes');
-settings.text('These add code fixing certain quirks and bugs with the default CSS, and should generally be left on.');
+settings.text('These add code fixing certain quirks and bugs with the default \
+CSS, and should generally be left on.');
 settings.toggle('fixes_code', 'Fix code text visibility', true);
 settings.toggle('fixes_feed_admin', 'Fix admin/mod colors in feed', true);
-settings.toggle('fixes_shout_double_scrollbar', 'Fix double scrollbar in shouts', true);
+settings.toggle('fixes_shout_double_scrollbar',
+  'Fix double scrollbar in shouts', true);
 
 // CSS for fix_* options
-let fix_codes = [
-  ['fixes_code', `\
+const fix_codes = {
+  fixes_code: `\
 /* Code color */
 code[class*="language-"] {
   color: #333;
 }
-`],
-  ['fixes_feed_admin', `\
+`,
+  fixes_feed_admin: `\
 /* Feed moderation colors */
-.cmty-post .cmty-user-admin a,.cmty-post .cmty-user-admin:before{color: #009fad !important;}
-.cmty-forum-admin a{color: #900 !important;}
-.cmty-forum-mod a{color: #090 !important;}
-`],
-  ['fixes_shout_double_scrollbar', `\
+.cmty-post .cmty-user-admin a,
+.cmty-post .cmty-user-admin:before {
+  color: #009fad !important;
+}
+.cmty-forum-admin a {
+  color: #900 !important;
+}
+.cmty-forum-mod a {
+  color: #090 !important;
+}
+`,
+  fixes_shout_double_scrollbar: `\
 /* Shout scrollbar fix */
 .blog-shout-wrapper > .aops-scroll-outer > .aops-scroll-inner{
 scrollbar-width: none;
 }
 /* Nonstandard but necessary until Chromium supports scrollbar-width */
-.blog-shout-wrapper > .aops-scroll-outer > .aops-scroll-inner::-webkit-scrollbar {
+.blog-shout-wrapper > .aops-scroll-outer
+> .aops-scroll-inner::-webkit-scrollbar {
 width: 0px;
 }
-`],
-];
+`,
+};
 
-// Big ugly code to generate the CSS
-let generate = conf => {
-  let segments = []
+/**
+ * Generate CSS based on settings
+ * @param {Map<string, any>} conf Settings
+ * @returns {string} Generated CSS
+ */
+function generate(conf) {
+  let segments = [];
   let wrapper_bg = conf.wrapper_bg
     ? conf.wrapper_bg
     : {
@@ -147,19 +187,19 @@ let generate = conf => {
   Wrapper handling.
   This handles the full width wrapper and the sidebar mode.
   If the wrapper is floating main needs to be full width.
-  If it isn't but the wrapper is full width, main needs calc to adjust with the sidebar.
+  If it isn't but the wrapper is full width, main needs calc to adjust with the
+  sidebar.
   */
-  if (conf.sidebar_mode === 'Float') {
-    segments.push(`\
+  if (conf.sidebar_mode === 'Float') segments.push(`\
 #main {
   width: 100%;
 }
 `);
-  } else if (conf.wrapper_full_width === true) segments.push(`\
+  else if (conf.wrapper_full_width === true) segments.push(`\
 #main {
   width: calc(100% - 270px);
 }
-`)
+`);
   if (conf.wrapper_full_width === true) segments.push(`\
 #wrapper {
   width: 100%;
@@ -168,18 +208,15 @@ let generate = conf => {
 
   // Adds fixes
   let fixes = '';
-  for (const [fix, code] of fix_codes) {
-    if (conf[fix]) {
-      fixes += code;
-    }
-  }
+  for (const fix in fix_codes) if (conf[fix]) fixes += fix_codes[fix];
+
   if (fixes) segments.push(`/* Fixes */
 ${fixes}`);
   return segments.join('');
 }
 
 let current_css;
-let copy_button = document.getElementById('copy_button');
+const copy_button = document.getElementById('copy_button');
 const COPY_BUTTON_TEXT = 'Copy generated CSS';
 let copy_timeout;
 copy_button.addEventListener('click', () => {
@@ -187,19 +224,25 @@ copy_button.addEventListener('click', () => {
   navigator.clipboard.writeText(current_css).then(() => {
     copy_button.innerText = 'CSS Copied';
     if (copy_timeout) clearTimeout(copy_timeout);
-    copy_timeout = setTimeout(() => copy_button.innerText = COPY_BUTTON_TEXT, 1000);
+    copy_timeout = setTimeout(
+      () => copy_button.innerText = COPY_BUTTON_TEXT, 1000);
   }).catch(() => {
     copy_button.innerText = 'CSS could not be copied';
     if (copy_timeout) clearTimeout(copy_timeout);
-    copy_timeout = setTimeout(() => copy_button.innerText = COPY_BUTTON_TEXT, 3000);
+    copy_timeout = setTimeout(
+      () => copy_button.innerText = COPY_BUTTON_TEXT, 3000);
   });
 });
 
 
-// Messages generated CSS to the child frame
+/**
+ * Send CSS to the iframe
+ */
 function send_css() {
   let conf = {};
-  for (let el of option_pane.elements) conf[el.name] = el.type == "checkbox" ? el.checked : el.value;
+  for (let el of option_pane.elements)
+    conf[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+
   current_css = generate(conf);
   window.frames[0].postMessage({
     type: 'blog css',
@@ -209,8 +252,7 @@ function send_css() {
 
 // Send CSS if the child requests it
 window.addEventListener('message', e => {
-  if (e.data == 'css request') send_css();
+  if (e.data === 'css request') send_css();
 });
 // Send CSS when the options are changed
 option_pane.addEventListener('input', send_css);
-
